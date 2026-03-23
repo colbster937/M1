@@ -100,11 +100,13 @@ void firmware_update_start(void)
 	uint8_t uret, old_op_mode;
 
 	uret = M1_FW_UPDATE_NOT_READY;
+	/*
 	if ( !m1_check_battery_level(50) ) // Is battery level less than 50%?
     {
 		fw_update_status = M1_FW_UPDATE_NOT_READY; // Force quit
     	uret = M1_FW_UPDATE_LOW_BATTERY;
     } // if ( !m1_check_battery_level(50) )
+	*/
 
 	old_op_mode = m1_device_stat.op_mode;
 
