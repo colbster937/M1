@@ -1,0 +1,31 @@
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build cmake gcc-arm-none-eabi binutils-arm-none-eabi
+          chmod +x build.sh
+          ./build.sh
+        
+      - id: fw
+        run: |
+            FILE=$(ls artifacts/M1_v*_C*.bin | head -n 1)
+            NAME=$(basename "$FILE" .bin)
+            echo "file=$FILE" >> "$GITHUB_OUTPUT"
+            echo "name=$NAME" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.fw.outputs.name }}
+          path: ${{ steps.fw.outputs.file }}
+          if-no-files-found: error
